@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="style.css">
+    <title>RWet.9541</title>
+</head>
+<body>
+    <div class="container">
+        <div class="left-info">
+            <div class="pic-gradient"></div>
+            <div class="today-info">
+                <h2 id="day">Friday</h2>
+                <span id="date">28 July 2023</span>
+                <div>
+                    <i class='bx bx-current-location'></i>
+                        <span style="font-weight:700;font-size:20px;" id="city">Hanoi</span>
+                </div>
+            </div>
+            <div class="today-weather">
+                <i class='bx bx-sun' ></i>
+                <h1 class="weather-temp" id="temp">25°C</h1>
+                <h3 id="status">Sunny</h3>
+            </div>
+        </div>
+
+        <div class="right-info">
+            <div class="day-info">
+                <div>
+                    <span class="title">CLOUDS</span>
+                    <span class="value" id="cloud">4 %</span>
+                </div>
+                <div>
+                    <span class="title">HUMIDITY</span>
+                    <span class="value" id="humidity">26 %</span>
+                </div>
+                <div>
+                    <span class="title">WIND SPEED</span>
+                    <span class="value" id="wind">4 km/h</span>
+                </div>
+            </div>
+            <ul class="days-list">
+                <li>
+                    <i class='bx bx-cloud'></i>
+                    <span id="n0-day">Sat</span>
+                    <span class="day-temp" id="day0-temp">99°C</span>
+                </li>
+                <li>
+                    <i class='bx bx-sun'></i>
+                    <span id="n1-day">Sun</span>
+                    <span class="day-temp" id="day1-temp">99°C</span>
+                </li>
+                <li>
+                    <i class='bx bx-cloud-rain'></i>
+                    <span id="n2-day">Mon</span>
+                    <span class="day-temp" id="day2-temp">99°C</span>
+                </li>
+                <li>
+                    <i class='bx bx-cloud-drizzle'></i>
+                    <span id="n3-day">Tue</span>
+                    <span class="day-temp" id="day3-temp">99°C</span>
+                </li>
+            </ul>
+            <div class="btn-container">
+                <div class="loc-searchbox">
+                    <input type="text" id="locationn">
+                    <button class="bx bx-search" onclick="checkWeather()"></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const apiKey="987cd37eea9b0bb51fa6ed955f66b453";
+        const apiUrl="https://api.openweathermap.org/data/2.5/weather?units=metric&";
+        const forecastUrl="https://api.openweathermap.org/data/2.5/forecast?units=metric";
+        async function checkWeather()
+        {
+            var city=toTitleCase(document.querySelector("#locationn").value);
+            console.log(city);
+            const response = await fetch(apiUrl + "&q=" + city + '&appid=' + apiKey);
+            const forecastResponce = await fetch(forecastUrl + "&q=" + city + "&appid=" + apiKey);
+            var data = await response.json();
+            var foredata= await forecastResponce.json();
+            console.log(data);
+            console.log(foredata);
+            document.querySelector("#city").innerHTML=data.name;
+            document.querySelector("#temp").innerHTML=Math.round(data.main.temp) +"°C";
+            document.querySelector("#humidity").innerHTML=data.main.humidity +"%";
+            document.querySelector("#cloud").innerHTML=data.clouds.all;
+            document.querySelector("#wind").innerHTML=data.wind.speed + "km/h";
+            document.querySelector("#status").innerHTML=toTitleCase(data.weather[0].description);
+            document.querySelector("#city").innerHTML=city + ", " + data.sys.country;
+            document.querySelector("#day").innerHTML=fullDay();
+            document.querySelector("#date").innerHTML=fullDate();
+            document.querySelector("#n0-day").innerHTML=theDay(0);
+            document.querySelector("#n1-day").innerHTML=theDay(1);
+            document.querySelector("#n3-day").innerHTML=theDay(2);
+            document.querySelector("#n2-day").innerHTML=theDay(3);
+            document.querySelector("#day0-temp").innerHTML=(Math.round(foredata.list[0].main.temp *10)/10)+"°C";
+            document.querySelector("#day1-temp").innerHTML=(Math.round(foredata.list[1].main.temp *10)/10)+"°C";
+            document.querySelector("#day2-temp").innerHTML=(Math.round(foredata.list[2].main.temp *10)/10)+"°C";
+            document.querySelector("#day3-temp").innerHTML=(Math.round(foredata.list[3].main.temp *10)/10)+"°C";
+        }
+
+        /* document.getElementsByid("location").addEventListener("keyup",function()
+        {
+            if(event.keyCode==13)
+            {
+                city=document.getElementById("location").value;
+                checkWeather();
+            }
+        }); */
+
+        function toTitleCase(string) 
+        {
+            return string.charAt(0).toUpperCase() + string.slice(1);
+        }
+        const dayn=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]
+        function fullDay()
+        {
+            
+            var today=new Date();
+            return dayn[today.getDay()]
+        }
+        function fullDate()
+        {
+            var today=new Date();
+            outt=today.toDateString().split(" ").splice(1);
+            return outt[1]+' '+outt[0]+' '+outt[2];
+        }
+        function theDay(n)
+        {
+            var today = new Date();
+            var tomorrow = new Date(today);
+            tomorrow.setDate(today.getDate() + (n+1));
+            var reout =tomorrow.toDateString();
+            return reout.split(" ")[0];
+        }
+        /*while(true)
+        {
+            setTimeout(function(){
+                checkWeather();
+            }, 2000);
+        } */
+        
+        checkWeather();
+    </script>
+</body>
+</html>

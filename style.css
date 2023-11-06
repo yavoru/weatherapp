@@ -216,6 +216,9 @@ body
 
 .loc-searchbox button
 {
+    display:flex;
+    justify-content: center;
+    margin-left: 3px;
     background: transparent;
     color: #fff;
     border: none;

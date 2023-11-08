@@ -87,7 +87,7 @@
             document.querySelector("#cloud").innerHTML=data.clouds.all;
             document.querySelector("#wind").innerHTML=data.wind.speed + "km/h";
             document.querySelector("#status").innerHTML=toTitleCase(data.weather[0].description);
-            document.querySelector("#city").innerHTML=city + ", " + data.sys.country;
+            document.querySelector("#city").innerHTML=toCapCase(city) + ", " + data.sys.country;
             document.querySelector("#day").innerHTML=fullDay();
             document.querySelector("#date").innerHTML=fullDate();
             document.querySelector("#n0-day").innerHTML=theDay(0);
@@ -145,7 +145,15 @@
                 checkWeather();
             }
         }); */
-
+        function toCapCase(str)
+        {
+            const wrd=str.split(" ");
+            for(let i=0;i<wrd.length;++i)
+            {
+                wrd[i]= wrd[i][0].toUpperCase() + wrd[i].substr(1);
+            }
+            return wrd.join(" ");
+        }
         function toTitleCase(string)
         {
             return string.charAt(0).toUpperCase() + string.slice(1);
